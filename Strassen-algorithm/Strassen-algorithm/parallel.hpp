@@ -20,6 +20,8 @@ class Task : public task {
 	Matrix* my_b;
 
 public:
+	static int grainsize;
+
 	Task(Matrix* c, Matrix* m, int m_row, int m_col, Matrix* n, int n_row, int n_col);
 	~Task();
 

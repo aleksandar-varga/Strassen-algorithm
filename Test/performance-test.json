@@ -1,0 +1,22 @@
+{
+	"type": "performance",
+	"iterations": 10,
+	"tests": [
+		{
+			"size": 64,
+			"grainsize": [8,16,32]
+		},
+		{
+			"size": 128,
+			"grainsize": [8,16,32,64]
+		},
+		{
+			"size": 256,
+			"grainsize": [8,16,32,64,128]
+		},
+		{
+			"size": 512,
+			"grainsize": [8,16,32,64,128,256]
+		},
+	]
+}

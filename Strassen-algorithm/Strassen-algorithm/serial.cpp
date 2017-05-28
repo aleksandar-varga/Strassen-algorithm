@@ -2,32 +2,32 @@
 
 
 void add(Matrix* c, Matrix* a, int a_row, int a_col, Matrix* b, int b_row, int b_col) {
-	for (int i = 0; i < c->size; ++i)
-		for (int j = 0; j < c->size; ++j)
+	for (int i = 0; i < c->size(); ++i)
+		for (int j = 0; j < c->size(); ++j)
 			c->at(i, j) = a->at(i + a_row, j + a_col) + b->at(i + b_row, j + b_col);
 }
 
 void sub(Matrix* c, Matrix* a, int a_row, int a_col, Matrix* b, int b_row, int b_col) {
-	for (int i = 0; i < c->size; ++i)
-		for (int j = 0; j < c->size; ++j)
+	for (int i = 0; i < c->size(); ++i)
+		for (int j = 0; j < c->size(); ++j)
 			c->at(i, j) = a->at(i + a_row, j + a_col) - b->at(i + b_row, j + b_col);
 }
 
 void add2(Matrix* a, int a_row, int a_col, Matrix* b, int b_row, int b_col) {
-	for (int i = 0; i < b->size; ++i)
-		for (int j = 0; j < b->size; ++j)
+	for (int i = 0; i < b->size(); ++i)
+		for (int j = 0; j < b->size(); ++j)
 			a->at(i + a_row, j + a_col) += b->at(i + b_row, j + b_col);
 }
 
 void sub2(Matrix* a, int a_row, int a_col, Matrix* b, int b_row, int b_col) {
-	for (int i = 0; i < b->size; ++i)
-		for (int j = 0; j < b->size; ++j)
+	for (int i = 0; i < b->size(); ++i)
+		for (int j = 0; j < b->size(); ++j)
 			a->at(i + a_row, j + a_col) -= b->at(i + b_row, j + b_col);
 }
 
 
 void mul(Matrix* c, Matrix* a, int a_row, int a_col, Matrix* b, int b_row, int b_col) {
-	int size = c->size;
+	int size = c->size();
 
 
 	if (size == 2) {

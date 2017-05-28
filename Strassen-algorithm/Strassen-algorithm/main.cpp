@@ -1,77 +1,125 @@
 #include <iostream>
-#include <fstream>
 #include <chrono>
+#include <fstream>
+#include <typeinfo>
+
+#include "json.hpp"
 #include "tbb/tbb.h"
 
 #include "matrix.hpp"
-#include "serial.hpp"
 #include "parallel.hpp"
+#include "serial.hpp"
+#include "test.hpp"
 
+#define VERIFICATION_TEST
+#define PERFORMANCE_TEST
+#define RANDOM
+
+
+using namespace nlohmann;
 using namespace std;
-using namespace chrono;
-/*
+using namespace std::chrono;
+
+
 int main() {
-
-	ifstream o("../../test");
-	Matrix a, b;
-	o >> a;
-	o >> b;
-
-	cout << a;
-	cout << b;
+#ifdef VERIFICATION_TEST
+	VerificationTestBundle vtb("../../Test/verification-test.json");
+	json verification_result = vtb.run();
 
 
-	return 0;
-}*/
+	std::ofstream vout("../../Test/verification-results.json");
 
+	if (vout.fail()) {
+		throw runtime_error("Failed to open output file. Aborting..");
+		return 1;
+	}
 
-void main() {
+	vout << std::setw(4) << verification_result;
+	vout.close();
 
+#endif
+
+#ifdef PERFORMANCE_TEST
 	srand(time(NULL));
+
+	PerformanceTestBundle ptb("../../Test/performance-test.json");
+	json performance_result = ptb.run();
 	
-	int size = 512;
-	int* a = new int[size*size];
-	int* b = new int[size*size];
+	std::ofstream pout("../../Test/performance-results.json");
+	
+	if (pout.fail()) {
+		throw runtime_error("Failed to open output file. Aborting..");
+		return 1;
+	}
+
+	pout << std::setw(4) << performance_result;
+	pout.close();
+
+#endif
+
+#ifndef VERIFICATION_TEST
+#ifndef PERFORMANCE_TEST
+
+	Matrix* m;
+	Matrix* n;
+
+#ifdef RANDOM
+	std::srand(time(NULL));
+
+	int size;
+	std::cout << "Enter matrix size: ";
+	std::cin >> size;
+	std::cout << std::endl;
+
+	Matrix* m = new Matrix(size);
+	Matrix* n = new Matrix(size);
+
+	int* a = m->values();
+	int* b = n->values();
 
 	for (int i = 0; i < size*size; ++i) {
 		a[i] = rand() % 100;
 		b[i] = rand() % 100;
 	}
-	
-	Matrix* m = new Matrix(size);
-	m->values = a;
 
-	Matrix* n = new Matrix(size);
-	n->values = b;
+#else
+	std::ifstream i("input.json");
+	if (i.fail()) {
+		cout << "Input file does not exist!" << endl;
+		return 1;
+	}
 
-	Matrix* o1 = new Matrix(size);
+	json j;
+	i >> j;
+	i.close();
+
+	m = new Matrix(j["A"]);
+	n = new Matrix(j["B"]);
+		
+
+#endif;
+
+	Matrix* c = new Matrix(size);
 
 	auto serial_start = high_resolution_clock::now();
-	mul(o1, m, 0, 0, n, 0, 0);
+	mul(c, m, 0, 0, n, 0, 0);
 	auto serial_end = high_resolution_clock::now();
 	auto serial_time = duration_cast<microseconds>(serial_end - serial_start).count();
-	cout << "Serial time: " << serial_time << endl;
-	
-	Matrix* o2 = new Matrix(size);
+	std::cout << "Serial time: " << serial_time << std::endl;
+
+	delete c;
+
+	Matrix* d = new Matrix(size);
 
 	auto parallel_start = high_resolution_clock::now();
-	pmul(o2, m, 0, 0, n, 0, 0);
+	pmul(d, m, 0, 0, n, 0, 0);
 	auto parallel_end = high_resolution_clock::now();
 	auto parallel_time = duration_cast<microseconds>(parallel_end - parallel_start).count();
-	cout << "Parallel time: " << parallel_time << endl;
+	std::cout << "Parallel time: " << parallel_time << std::endl;
 
-	cout << "Validating.." << endl;
-	bool succesful = true;
-	for (int i = 0; i < size*size; ++i) {
-		if (o1->values[i] != o2->values[i]) {
-			cout << "Validation failed." << endl;
-			succesful = false;
-			break;
-		}
-	}
-	if (succesful) {
-		cout << "Validation succesful!" << endl;
-		cout << "Speed-up: " << (float)serial_time / parallel_time << endl;
-	}
-	delete m, n, o1, o2;
+	delete m, n, d;
+#endif
+#endif
+
+	return 0;
 }

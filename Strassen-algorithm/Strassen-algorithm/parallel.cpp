@@ -2,6 +2,8 @@
 
 using namespace tbb;
 
+int Task::grainsize = 2;
+
 Task::Task(Matrix* c, Matrix* m, int m_row, int m_col, Matrix* n, int n_row, int n_col)
 	: size(size), my_c(c), my_a_row(m_row), my_a_col(m_col), my_a(m), my_b_row(n_row), my_b_col(n_col), my_b(n)
 {}
@@ -17,9 +19,9 @@ task* Task::execute() {
 	int b_col = my_b_col;
 
 	Matrix* c = my_c;
-	int size = c->size;
+	int size = c->size();
 
-	if (size <= GRAIN) {
+	if (size <= grainsize) {
 		mul(c, a, a_row, a_col, b, b_row, b_col);
 	}
 	else {

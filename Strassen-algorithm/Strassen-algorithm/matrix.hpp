@@ -2,50 +2,68 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include "json.hpp"
 
-using namespace std;
+class Matrix {
 
-struct Matrix {
+	int* m;
+	int n;
 
-	int* values;
-	int size;
-
+public:
 	Matrix() {
-
+		m = nullptr;
 	}
 
-	Matrix(int size) : size(size) {
-		values = new int[size*size];
-		memset(values, 0, sizeof(int) * size * size);
+	Matrix(int size) : n(size) {
+		m = new int[size * size];
+		memset(m, 0, sizeof(int) * size * size);
+	}
+
+	Matrix(int size, int* values) : n(size) {
+		int s = size * size;
+		m = new int[s];
+		memcpy_s(m, s * sizeof(int), values, s * sizeof(int));
+	}
+
+	Matrix(int size, std::vector<int> values) : n(size) {
+		int s = size * size;
+
+		if (s != values.size())
+			throw std::runtime_error("Invalid arguments.");
+
+		m = new int[s];
+		
+		for (int i = 0; i < s; ++i)
+			m[i] = values[i];
+	}
+
+	Matrix(nlohmann::json j) {
+		n = j["size"];
+
+		int s = n * n;
+		m = new int[s];
+		if (s != j["values"].size())
+			throw std::runtime_error("JSON is not valid.");
+
+		for (int i = 0; i < s; ++i)
+			m[i] = j["values"];
 	}
 
 	~Matrix() {
-		delete[] values;
+		delete[] m;
 	}
 
 	inline int& at(int i, int j) {
-		return values[i * size + j];
+		return m[i * n + j];
 	}
 
-	friend ostream& operator<<(ostream& out, Matrix& m) {
-		out << endl;
-		for (int i = 0; i < m.size; ++i) {
-			for (int j = 0; j <m.size; ++j)
-				out << m.values[i * m.size + j] << "\t";
-			out << endl;
-		}
-		out << endl;
-
-		return out;
+	inline int size() const {
+		return n;
 	}
 
-	friend istream& operator>>(istream& in, Matrix& m) {
-		in >> m.size;
-		m.values = new int[m.size * m.size];
-		
-		for(int i =0 ; i < m.size * m.size; ++i)
-			in >> m.values[i];
-
-		return in;
+	inline int* values() {
+		return m;
 	}
+
 };
