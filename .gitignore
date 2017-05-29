@@ -9,9 +9,6 @@
 *.userosscache
 *.sln.docstates
 
-!tbb.dll
-!tbb_debug.dll
-
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -21,11 +18,16 @@
 [Rr]elease/
 [Rr]eleases/
 x64/
-x86/
 bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+
+*.exe
+*.bsc
+*.ilk
+*.pdb
+*.lastcodeanalysissucceeded
 
 # Visual Studio 2015 cache/options directory
 .vs/
