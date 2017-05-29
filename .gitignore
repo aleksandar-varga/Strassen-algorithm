@@ -13,22 +13,22 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
 [Rr]eleases/
-x64/
 bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+Strassen-algorithm/Strassen-algorithm/x64
+
 
 *.exe
 *.bsc
 *.ilk
 *.pdb
 *.lastcodeanalysissucceeded
-
+*.iobj
+*.ipdb
 # Visual Studio 2015 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
