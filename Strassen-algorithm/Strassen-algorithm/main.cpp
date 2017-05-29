@@ -11,7 +11,7 @@
 #include "serial.hpp"
 #include "test.hpp"
 
-#define VERIFICATION_TEST
+//#define VERIFICATION_TEST
 #define PERFORMANCE_TEST
 #define RANDOM
 

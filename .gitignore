@@ -9,6 +9,9 @@
 *.userosscache
 *.sln.docstates
 
+!tbb.dll
+!tbb_debug.dll
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
